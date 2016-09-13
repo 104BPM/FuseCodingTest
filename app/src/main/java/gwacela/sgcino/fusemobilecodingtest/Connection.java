@@ -1,4 +1,4 @@
-/**
+package gwacela.sgcino.fusemobilecodingtest; /**
  * Created by Steve.Gwacela on 2016/09/13.
  */
 
