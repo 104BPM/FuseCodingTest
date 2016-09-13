@@ -46,6 +46,6 @@ public class JSONHandler {
             Log.e("Error","Error with JSON: "+ E.getMessage());
         }
         return Result;
-        //this class will receive URL and read the JSON response
+        //this class will receive URL and read the JSON response jh
     }
 }
