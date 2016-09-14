@@ -29,4 +29,10 @@
         android:id="@+id/edtCompany"
         android:inputType="textImeMultiLine"
         android:imeOptions="actionGo" />
+
+    <ImageView
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:id="@+id/imgDownloaded"
+        android:layout_gravity="center_horizontal" />
 </LinearLayout>

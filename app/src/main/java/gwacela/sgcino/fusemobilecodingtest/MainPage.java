@@ -1,14 +1,22 @@
 package gwacela.sgcino.fusemobilecodingtest;
 
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.Color;
 import android.os.AsyncTask;
+import android.support.v4.app.NotificationCompatSideChannelService;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.JsonReader;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.inputmethod.EditorInfo;
 import android.widget.*;
+
+import org.json.JSONArray;
+import org.json.JSONObject;
 
 import java.net.HttpURLConnection;
 
@@ -16,6 +24,7 @@ public class MainPage extends AppCompatActivity {
     //global variable
     private EditText edtCompanySearch;
     public JSONHandler ManipulateJSON;
+    private ImageView ImgToDisplay;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -26,7 +35,25 @@ public class MainPage extends AppCompatActivity {
 
     public void FindViews() {
         try {
+            ImgToDisplay = (ImageView) findViewById(R.id.imgDownloaded);
             edtCompanySearch = (EditText) findViewById(R.id.edtCompany);
+            edtCompanySearch.addTextChangedListener(new TextWatcher() {
+                @Override
+                public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+                }
+
+                @Override
+                public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+                }
+
+                @Override
+                public void afterTextChanged(Editable s) {
+                    edtCompanySearch.setBackgroundColor(Color.WHITE);
+                }
+            });
+
             edtCompanySearch.setOnEditorActionListener(new TextView.OnEditorActionListener() {
                 @Override
                 public boolean onEditorAction(TextView Main, int actionId, KeyEvent event) {
@@ -40,7 +67,7 @@ public class MainPage extends AppCompatActivity {
                         if (edtCompanySearch.getText().toString().length() > 1)
                         {
                             String URL = edtCompanySearch.getText().toString().replaceAll(" ", "");
-                            new Query().execute("https://fuse.fusion-universal.com/api/v1/company.json");
+                            new Query().execute("https://"+URL+".fusion-universal.com/api/v1/company.json");
                             //Toast.makeText(getBaseContext(),"https://"+Temp+".fusion-universal.com/api/v1/company.json",Toast.LENGTH_SHORT).show();
                             //replace whitespace
                         } else {
@@ -56,12 +83,10 @@ public class MainPage extends AppCompatActivity {
 
     }
 
-    public void Processing(String URL) {
-
-    }
-
     private class Query extends AsyncTask<String, Void, String>
     {
+        String Result="";
+        JSONObject CurrJSONObject;
         @Override
         protected void onPreExecute()
         {
@@ -71,9 +96,17 @@ public class MainPage extends AppCompatActivity {
         @Override
         protected String doInBackground(String... params) {
             try {
+
                 //when url has been received, go fetch results here
                 ManipulateJSON = new JSONHandler();
-                ManipulateJSON.Get(params[0]);
+                Result = ManipulateJSON.ReadJSON(params[0]);
+                JsonReader JReader;
+                Log.i("Success",Result);
+                params[0]= "";
+                if(Result !="Failed") {
+                    CurrJSONObject = new JSONObject(Result);
+                    Log.i("JSON Success: ", CurrJSONObject.getString("name"));
+                }
             } catch (Exception E) {
                 Log.e("GET JSON", "Error executing the following URL" + params[0]);
             }
@@ -82,10 +115,27 @@ public class MainPage extends AppCompatActivity {
 
         @Override
         protected void onPostExecute(String s) {
-            Toast.makeText(getBaseContext(), s, Toast.LENGTH_SHORT).show();
-            super.onPostExecute(s);
-        }
-    }
 
+            try {
+                if(Result !="Failed") {
+                    edtCompanySearch.clearComposingText();
+                    edtCompanySearch.setText(CurrJSONObject.getString("name"));
+                    edtCompanySearch.setBackgroundColor(Color.GREEN);
+                    ImgToDisplay.setImageBitmap(ManipulateJSON.DownloadIMG(CurrJSONObject.getString("logo")));
+                }
+                else
+                {
+                    edtCompanySearch.setBackgroundColor(Color.RED);
+
+                }
+                super.onPostExecute(s);
+            }
+            catch(Exception E)
+            {
+                Log.e("GET JSON", "Error");
+            }
+        }
+
+    }
 
 }
