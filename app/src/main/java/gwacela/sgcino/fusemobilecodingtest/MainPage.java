@@ -15,10 +15,9 @@ import android.view.KeyEvent;
 import android.view.inputmethod.EditorInfo;
 import android.widget.*;
 
-import org.json.JSONArray;
 import org.json.JSONObject;
 
-import java.net.HttpURLConnection;
+
 
 public class MainPage extends AppCompatActivity {
     //global variable
@@ -51,6 +50,7 @@ public class MainPage extends AppCompatActivity {
                 @Override
                 public void afterTextChanged(Editable s) {
                     edtCompanySearch.setBackgroundColor(Color.WHITE);
+                    ImgToDisplay.setImageBitmap(null);
                 }
             });
 
