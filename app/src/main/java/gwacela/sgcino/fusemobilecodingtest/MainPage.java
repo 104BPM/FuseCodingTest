@@ -68,7 +68,7 @@ public class MainPage extends AppCompatActivity {
                         {
                             String URL = edtCompanySearch.getText().toString().replaceAll(" ", "");
                             new Query().execute("https://"+URL+".fusion-universal.com/api/v1/company.json");
-                            //Toast.makeText(getBaseContext(),"https://"+Temp+".fusion-universal.com/api/v1/company.json",Toast.LENGTH_SHORT).show();
+                            Toast.makeText(getBaseContext(),"Processing request,please wait...",Toast.LENGTH_LONG).show();
                             //replace whitespace
                         } else {
                             Toast.makeText(getBaseContext(), "Text is too short", Toast.LENGTH_SHORT).show();
@@ -85,6 +85,7 @@ public class MainPage extends AppCompatActivity {
 
     private class Query extends AsyncTask<String, Void, String>
     {
+        Bitmap ImgBitmap = null;
         String Result="";
         JSONObject CurrJSONObject;
         @Override
@@ -106,6 +107,8 @@ public class MainPage extends AppCompatActivity {
                 if(Result !="Failed") {
                     CurrJSONObject = new JSONObject(Result);
                     Log.i("JSON Success: ", CurrJSONObject.getString("name"));
+                   ImgBitmap = ManipulateJSON.DownloadIMG("http://fuse.fusion-universal.com/media/W1siZiIsIjIwMTYvMDEvMjcvMTYvMDQvMDMvMjgyL0FydGJvYXJkXzYucG5nIl0sWyJwIiwidGh1bWIiLCIxODB4NjQiXV0?sha=949ecc4584afbf19");
+                    Log.i("BItmap: ", CurrJSONObject.getString("logo"));
                 }
             } catch (Exception E) {
                 Log.e("GET JSON", "Error executing the following URL" + params[0]);
@@ -121,7 +124,7 @@ public class MainPage extends AppCompatActivity {
                     edtCompanySearch.clearComposingText();
                     edtCompanySearch.setText(CurrJSONObject.getString("name"));
                     edtCompanySearch.setBackgroundColor(Color.GREEN);
-                    ImgToDisplay.setImageBitmap(ManipulateJSON.DownloadIMG(CurrJSONObject.getString("logo")));
+                    ImgToDisplay.setImageBitmap(ImgBitmap);
                 }
                 else
                 {

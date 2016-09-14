@@ -3,18 +3,14 @@ package gwacela.sgcino.fusemobilecodingtest;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.util.Log;
-import android.widget.Toast;
 
-import org.json.JSONArray;
-import org.json.JSONObject;
 
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
 import java.net.URL;
-import java.net.URLConnection;
-import java.util.Properties;
 
 import javax.net.ssl.HttpsURLConnection;
 
@@ -63,6 +59,7 @@ public class JSONHandler {
         {
             Log.e("Error","Error with JSON: "+ E.getMessage());
         }
+        FuseConnection.disconnect();
         return Result;
         //this class will receive URL and read the JSON response jh
     }
@@ -73,19 +70,20 @@ public class JSONHandler {
         InputStream IMGStream;
         try
         {
+            HttpURLConnection FuseConnection2;
             URL ConvertToURl = new URL(ImgURL);
             //open connecition
-            FuseConnection = (HttpsURLConnection) ConvertToURl.openConnection();
-            FuseConnection.setConnectTimeout(HTTP_TIMEOUT);
-            FuseConnection.setRequestMethod("GET");
-            FuseConnection.setReadTimeout(HTTP_TIMEOUT);
-            FuseConnection.connect();
-
-            if (FuseConnection.getResponseCode()== 200)
+            FuseConnection2 = (HttpURLConnection) ConvertToURl.openConnection();
+            FuseConnection2.setConnectTimeout(HTTP_TIMEOUT);
+            FuseConnection2.setRequestMethod("GET");
+            FuseConnection2.setReadTimeout(HTTP_TIMEOUT);
+            FuseConnection2.connect();
+            int response = FuseConnection2.getResponseCode();
+            if (response == 200)
             {
                 Log.i("Image download: ","Image downloaded successfully");
-                IMGStream= FuseConnection.getInputStream();
-                result= BitmapFactory.decodeStream(IMGStream);
+                IMGStream = FuseConnection2.getInputStream();
+                result = BitmapFactory.decodeStream(IMGStream);
             }
             else
             {
@@ -94,7 +92,7 @@ public class JSONHandler {
         }
         catch (Exception E)
         {
-
+            Log.e("Error Downloading","There seems to be a problem: "+E.getMessage());
         }
         return result;
     }
