@@ -16,14 +16,14 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceMedium"
-        android:text="Company"
+        android:text="@string/company_name"
         android:id="@+id/txtCompany"
         android:layout_gravity="center_horizontal"
         android:textSize="30dp"
         />
 
     <EditText
-        android:hint="please provide a company name "
+        android:hint="@string/hint"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:id="@+id/edtCompany"
@@ -31,8 +31,9 @@
         android:imeOptions="actionGo" />
 
     <ImageView
-        android:layout_width="100dp"
-        android:layout_height="100dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:id="@+id/imgDownloaded"
-        android:layout_gravity="center_horizontal" />
+        android:layout_gravity="center_horizontal"
+        android:adjustViewBounds="true"/>
 </LinearLayout>

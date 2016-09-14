@@ -1,10 +1,12 @@
 package gwacela.sgcino.fusemobilecodingtest;
 
+
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
+
 import android.graphics.Color;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.AsyncTask;
-import android.support.v4.app.NotificationCompatSideChannelService;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.Editable;
@@ -16,9 +18,6 @@ import android.view.inputmethod.EditorInfo;
 import android.widget.*;
 
 import org.json.JSONObject;
-
-
-
 public class MainPage extends AppCompatActivity {
     //global variable
     private EditText edtCompanySearch;
@@ -30,6 +29,21 @@ public class MainPage extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main_page);
         FindViews();
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
     }
 
     public void FindViews() {
@@ -59,19 +73,26 @@ public class MainPage extends AppCompatActivity {
                 public boolean onEditorAction(TextView Main, int actionId, KeyEvent event) {
                     if (actionId == EditorInfo.IME_ACTION_GO) {
                         //Perform String manipulation
-
                         //Call AsyncTask
-
                         //Url https://[COMPANY NAME].fusion-universal.com/api/v1/company.json
-
-                        if (edtCompanySearch.getText().toString().length() > 1)
+                        //check if network is enabled
+                        ConnectivityManager ConnectMngr = (ConnectivityManager) getSystemService(CONNECTIVITY_SERVICE);
+                        NetworkInfo CurrNetworkInfo = ConnectMngr.getActiveNetworkInfo();
+                        if (CurrNetworkInfo!=null)
                         {
-                            String URL = edtCompanySearch.getText().toString().replaceAll(" ", "");
-                            new Query().execute("https://"+URL+".fusion-universal.com/api/v1/company.json");
-                            Toast.makeText(getBaseContext(),"Processing request,please wait...",Toast.LENGTH_LONG).show();
-                            //replace whitespace
-                        } else {
-                            Toast.makeText(getBaseContext(), "Text is too short", Toast.LENGTH_SHORT).show();
+                            if (edtCompanySearch.getText().toString().length() > 1)
+                            {
+                                String URL = edtCompanySearch.getText().toString().replaceAll(" ", "");
+                                new Query().execute("https://"+URL+".fusion-universal.com/api/v1/company.json");
+                                Toast.makeText(getBaseContext(),"Processing request,please wait...",Toast.LENGTH_LONG).show();
+                                //replace whitespace
+                            } else {
+                                Toast.makeText(getBaseContext(), "Text is too short", Toast.LENGTH_SHORT).show();
+                            }
+                        }
+                        else
+                        {
+                            Toast.makeText(getBaseContext(), "Please ensure your device has internet connection", Toast.LENGTH_SHORT).show();
                         }
                     }
                     return false;
@@ -104,7 +125,7 @@ public class MainPage extends AppCompatActivity {
                 JsonReader JReader;
                 Log.i("Success",Result);
                 params[0]= "";
-                if(Result !="Failed") {
+                if(!(Result.equals("Failed"))) {
                     CurrJSONObject = new JSONObject(Result);
                     Log.i("JSON Success: ", CurrJSONObject.getString("name"));
                    ImgBitmap = ManipulateJSON.DownloadIMG("http://fuse.fusion-universal.com/media/W1siZiIsIjIwMTYvMDEvMjcvMTYvMDQvMDMvMjgyL0FydGJvYXJkXzYucG5nIl0sWyJwIiwidGh1bWIiLCIxODB4NjQiXV0?sha=949ecc4584afbf19");
@@ -120,11 +141,13 @@ public class MainPage extends AppCompatActivity {
         protected void onPostExecute(String s) {
 
             try {
-                if(Result !="Failed") {
+                if(!(Result.equals("Failed"))) {
                     edtCompanySearch.clearComposingText();
                     edtCompanySearch.setText(CurrJSONObject.getString("name"));
                     edtCompanySearch.setBackgroundColor(Color.GREEN);
                     ImgToDisplay.setImageBitmap(ImgBitmap);
+                    ImgToDisplay.setMaxWidth(100);
+                    ImgToDisplay.setMaxHeight(100);
                 }
                 else
                 {

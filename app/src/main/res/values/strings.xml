@@ -1,3 +1,5 @@
 <resources>
-    <string name="app_name">FuseMobileCodingTest</string>
+    <string name="app_name">Fuse Mobile Coding Test</string>
+    <string name="company_name">Company</string>
+    <string name="hint">please provide a company name..</string>
 </resources>
