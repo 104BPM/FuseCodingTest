@@ -17,7 +17,7 @@ import javax.net.ssl.HttpsURLConnection;
 /**
  * Created by Steve.Gwacela on 2016/09/13.
  */
-public class JSONHandler {
+public class HTTPSConnectionClass {
 
     private static final int HTTP_TIMEOUT = 30 * 1000; // milliseconds
     public HttpsURLConnection FuseConnection;

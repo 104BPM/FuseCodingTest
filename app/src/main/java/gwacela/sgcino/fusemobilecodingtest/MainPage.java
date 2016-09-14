@@ -21,7 +21,7 @@ import org.json.JSONObject;
 public class MainPage extends AppCompatActivity {
     //global variable
     private EditText edtCompanySearch;
-    public JSONHandler ManipulateJSON;
+    public HTTPSConnectionClass ManipulateJSON;
     private ImageView ImgToDisplay;
 
     @Override
@@ -120,7 +120,7 @@ public class MainPage extends AppCompatActivity {
             try {
 
                 //when url has been received, go fetch results here
-                ManipulateJSON = new JSONHandler();
+                ManipulateJSON = new HTTPSConnectionClass();
                 Result = ManipulateJSON.ReadJSON(params[0]);
                 JsonReader JReader;
                 Log.i("Success",Result);
