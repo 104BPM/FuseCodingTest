@@ -128,7 +128,7 @@ public class MainPage extends AppCompatActivity {
                 if(!(Result.equals("Failed"))) {
                     CurrJSONObject = new JSONObject(Result);
                     Log.i("JSON Success: ", CurrJSONObject.getString("name"));
-                   ImgBitmap = ManipulateJSON.DownloadIMG("http://fuse.fusion-universal.com/media/W1siZiIsIjIwMTYvMDEvMjcvMTYvMDQvMDMvMjgyL0FydGJvYXJkXzYucG5nIl0sWyJwIiwidGh1bWIiLCIxODB4NjQiXV0?sha=949ecc4584afbf19");
+                   ImgBitmap = ManipulateJSON.DownloadIMG(CurrJSONObject.getString("logo"));
                     Log.i("BItmap: ", CurrJSONObject.getString("logo"));
                 }
             } catch (Exception E) {
